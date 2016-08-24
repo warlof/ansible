@@ -1,0 +1,20 @@
+---
+# This tasks will install usefull tools
+
+  - name: setup unzip
+    apt:
+      name: "unzip"
+      update_cache: "no"
+      state: "present"
+
+  - name: setup let's encrypt
+    apt:
+      name: "letsencrypt"
+      update_cache: "no"
+      state: "present"
+
+  - name: setup htop
+    apt:
+      name: "htop"
+      update_cache: "no"
+      state: "present"

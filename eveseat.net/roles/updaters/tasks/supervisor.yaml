@@ -1,0 +1,16 @@
+---
+# This tasks will setup supervisor
+
+  - name: Installing Supervisor
+    apt:
+      name: "supervisor"
+      update_cache: "no"
+      state: "present"
+
+  - name: Configuring Supervisor Jobs
+    template:
+      src: "supervisor.conf.j2"
+      dest: "/etc/supervisor/conf.d/{{ item.name }}.eveseat.net.conf"
+    with_items: seat_tickers
+    notify:
+      - Restart Supervisor Daemons

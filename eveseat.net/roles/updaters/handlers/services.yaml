@@ -1,0 +1,5 @@
+---
+  - name: Restart Supervisor Daemons
+    service:
+      name: "supervisor"
+      state: "restarted"

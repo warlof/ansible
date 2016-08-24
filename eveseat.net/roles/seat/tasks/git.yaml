@@ -1,0 +1,8 @@
+---
+# This tasks will install git
+
+  - name: setup git
+    apt:
+      name: "git"
+      update_cache: "no"
+      state: "present"

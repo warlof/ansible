@@ -1,0 +1,10 @@
+[program:seat-{{ item.name }}]
+command=/usr/bin/php /var/www/{{ item.name }}.eveseat.net/artisan queue:work --daemon --queue=high,medium,low,default --tries=3 --sleep=3
+process_name=%(program_name)s-80%(process_num)02d
+stdout_logfile = /var/log/seat-{{ item.name }}-80%(process_num)02d.log
+stdout_logfile_maxbytes=100MB
+stdout_logfile_backups=10
+numprocs=16
+directory=/var/www/{{ item.name }}.eveseat.net
+stopwaitsecs=600
+user={{ item.name }}

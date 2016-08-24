@@ -1,0 +1,8 @@
+---
+
+  - name: verify server activity
+    ping:
+
+  - include: ssh.yaml
+  - include: server-update.yaml
+  - include: tools.yaml

@@ -1,0 +1,7 @@
+---
+  - include: git.yaml
+  - include: redis.yaml
+  - include: php.yaml
+  - include: composer.yaml
+  - include: seat.yaml
+  - include: settings.yaml

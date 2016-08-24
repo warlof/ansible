@@ -1,0 +1,29 @@
+---
+# These tasks install PHP 7.0 including few extensions
+  - name: setup php cli
+    apt:
+      name: "php7.0-cli"
+      update_cache: "no"
+      state: "present"
+
+# Add extension
+  - name: add extensions to php
+    apt:
+      name: "{{ item }}"
+      update_cache: "no"
+      state: "present"
+    with_items:
+      - php7.0-mcrypt
+      - php7.0-intl
+      - php7.0-mysql
+      - php7.0-curl
+      - php7.0-gd
+      - php7.0-mbstring
+      - php7.0-bz2
+      - php7.0-dom
+
+  - name: Check PHP-FPM exists
+    stat:
+      path: "/etc/init.d/php7.0-fpm"
+    notify:
+      - restart fpm

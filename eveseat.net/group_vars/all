@@ -1,0 +1,16 @@
+# Mail server information
+
+mail:
+  hostname: value
+  username: value
+  password: value
+  port: value
+
+# SeAT Instance information
+
+seat_tickers:
+  - { name: ticker, database: { name: value, username: value, password: value, host: fqdn }, crest: { id: value, secret: value }}
+
+# DB Cluster Master
+
+cluster_master_nodename: fqdn

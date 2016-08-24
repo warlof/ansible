@@ -1,0 +1,15 @@
+---
+# These tasks install PHP 7.0 including few extensions
+  - name: setup php fpm
+    apt:
+      name: "php7.0-fpm"
+      update_cache: "no"
+      state: "present"
+
+  - name: Create socket using template
+    template:
+      src: "pool.conf.j2"
+      dest: "/etc/php/7.0/fpm/pool.d/{{ item.name }}.eveseat.net.conf"
+    with_items: seat_tickers
+    notify:
+      - Restart PHP pools

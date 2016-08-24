@@ -1,0 +1,9 @@
+---
+# This tasks will setup ssh
+
+  - name: Install new SSH key
+    authorized_key:
+      user: root
+      key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+      exclusive: "yes"
+      manage_dir: "yes"

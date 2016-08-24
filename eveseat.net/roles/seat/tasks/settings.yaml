@@ -1,0 +1,77 @@
+---
+# This tasks will change settings for SeAT instances
+
+  # Setup Database
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(DB_HOST=)(localhost)$'
+      replace: '\1{{ item.database.host }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(DB_DATABASE=)(homestead)$'
+      replace: '\1{{ item.database.name }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(DB_USERNAME=)(homestead)$'
+      replace: '\1{{ item.database.username }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(DB_PASSWORD=)(secret)$'
+      replace: '\1{{ item.database.password }}'
+    with_items: "{{ seat_tickers }}"
+
+  # Setup Mail Server
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(MAIL_HOST=)(mailtrap.io)$'
+      replace: '\1{{ mail.hostname }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(MAIL_PORT=)(2525)$'
+      replace: '\1{{ mail.port }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(MAIL_USERNAME=)(null)$'
+      replace: '\1{{ mail.username }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(MAIL_PASSWORD=)(null)$'
+      replace: '\1{{ mail.password }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(MAIL_ENCRYPTION=)(null)$'
+      replace: '\1tls'
+    with_items: "{{ seat_tickers }}"
+
+  # Setup Eve Online SSO
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(EVE_CLIENT_ID=)(null)$'
+      replace: '\1{{ item.crest.id }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(EVE_CLIENT_SECRET=)(null)$'
+      replace: '\1{{ item.crest.secret }}'
+    with_items: "{{ seat_tickers }}"
+
+  - replace:
+      dest: "/var/www/{{ item.name }}.eveseat.net/.env"
+      regexp: '^(EVE_CALLBACK_URL=)(http://seat.local/auth/eve/callback)$'
+      replace: '\1https://{{ item.name }}.eveseat.net/auth/eve/callback'
+    with_items: "{{ seat_tickers }}"

@@ -1,0 +1,48 @@
+---
+# This tasks will change settings for Mariadb in order to setup cluster
+
+  - replace:
+      dest: "/etc/mysql/my.cnf"
+      regexp: '^#wsrep_on=ON$'
+      replace: 'wsrep_on=ON'
+
+  - replace:
+      dest: "/etc/mysql/my.cnf"
+      regexp: '^#wsrep_provider=$'
+      replace: 'wsrep_provider=/usr/lib/galera/libgalera_smm.so'
+
+  # If it's the master, put empty protocol as value
+  # In other case, concat all nodes
+  - replace:
+      dest: "/etc/mysql/my.cnf"
+      regexp: '^#wsrep_cluster_address=$'
+      replace: 'wsrep_cluster_address=gcomm://'
+    when: ansible_fqdn == cluster_master_nodename
+
+  - replace:
+      dest: "/etc/mysql/my.cnf"
+      regexp: '^#wsrep_cluster_address=$'
+      replace: 'wsrep_cluster_address=gcomm://{{ cluster_master_nodename }}'
+    when: ansible_fqdn != cluster_master_nodename
+
+  - replace:
+      dest: "/etc/mysql/my.cnf"
+      regexp: '^#binlog_format=row$'
+      replace: 'binlog_format=row'
+
+  - replace:
+      dest: "/etc/mysql/my.cnf"
+      regexp: '^#default_storage_engine=InnoDB$'
+      replace: 'default_storage_engine=InnoDB'
+
+  - replace:
+      dest: "/etc/mysql/my.cnf"
+      regexp: '^#bind-address=0.0.0.0$'
+      replace: 'bind-address=0.0.0.0'
+#    notify:
+#      - restart mysql
+
+  - name: restart mysql
+    service:
+      name: "mysql"
+      state: "restarted"

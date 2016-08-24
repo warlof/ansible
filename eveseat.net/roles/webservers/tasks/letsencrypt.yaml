@@ -1,0 +1,5 @@
+---
+# This tasks will claim and install SSL certificates
+
+  - name: Claim certificate
+    command: letsencrypt certonly --webroot -w /var/www/{{ item.name }}.eveseat.net -d {{ item.name }}.eveseat.net --dry-run -m mail --user-agent Ansible --agree-tos --test-cert

@@ -1,0 +1,5 @@
+  - name: setup redis
+    apt:
+      name: "redis-server"
+      update_cache: "no"
+      state: "present"

@@ -1,0 +1,56 @@
+server {
+
+  # HTTP
+  listen 80;
+  listen[::]:80;
+
+  # HTTPS
+  listen 443;
+  listen[::]:443;
+
+  # Server
+  server_name {{ item.name }}.eveseat.net;
+
+  # SSL
+  # SSL - Certificates
+  ssl_certificate /etc/letsencrypt/live/{{ item.name }}.eveseat.net/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ item.name }}.eveseat.net/privkey.pem;
+  # SSL - Stapling
+  ssl_trusted_certificate /etc/letsencrypt/live/{{ item.name }}.eveseat.net/fullchain.pem;
+
+  # Logging
+  access_log /var/log/nginx/{{ item.name }}.eveseat.net/access.log combined;
+  error_log /var/log/nginx/{{ item.name }}.eveseat.net/error.log warn;
+
+  # Document Path
+  root /var/www/{{ item.name }}.eveseat.net/public;
+
+  # Indexes
+  index index.php index.html index.htm;
+
+  # PHP
+  location ~ \.php$ {
+    try_files $uri =404;
+    fascgi_pass unix:/run/php/{{ item.name }}.eveseat.net.sock;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+  }
+
+  # URL Rewrite
+  location / {
+    try_files $uri $uri/ index.php$is_args$args;
+    #index index.php index.html index.htm;
+    if (!-e $request_filename) {
+      rewrite ^/(.*)/$ /$1 redirect;
+    }
+    if (!-e $request_filename) {
+      rewrite ^(.*)$ /index.php last;
+    }
+  }
+
+  # Deny .htaccess access usage
+  location ~ /\.ht {
+    deny all;
+  }
+}

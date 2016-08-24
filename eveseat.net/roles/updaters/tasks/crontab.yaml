@@ -1,0 +1,15 @@
+---
+# This tasks will setup cronjob foreach SeAT instances
+
+  - name: Setup Scheduler
+    cron:
+      name: "SeAT scheduler"
+      month: "*"
+      weekday: "*"
+      day: "*"
+      hour: "*"
+      minute: "*"
+      state: "present"
+      user: "{{ item.name }}"
+      job: "/usr/bin/php /var/www/{{ item.name }}.eveseat.net/artisan schedule:run 1>> /dev/null 2>&1"
+    with_items: "{{ seat_tickers }}"

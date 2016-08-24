@@ -1,0 +1,57 @@
+---
+# This tasks will clone SeAT project into according location
+
+  - name: create SeAT service group
+    group:
+      name: "seat"
+      system: "yes"
+      state: "present"
+
+  - name: create Directory
+    file:
+      path: "/var/www"
+      state: "directory"
+      owner: "www-data"
+      group: "www-data"
+
+  - name: create SeAT service user
+    user:
+      name: "{{ item.name }}"
+      comment: "SeAT service user"
+      group: "seat"
+      groups: "seat,www-data"
+      system: "yes"
+      createhome: "no"
+      home: "/var/www/{{ item.name }}.eveseat.net"
+      state: "present"
+    with_items: "{{ seat_tickers }}"
+
+  - name: check SeAT instance path
+    stat:
+      path: "/var/www/{{ item.name }}.eveseat.net/"
+    register: seat_instance
+    with_items: seat_tickers
+
+  - name: setup SeAT
+    composer:
+      command: "create-project"
+      arguments: "eveseat/seat /var/www/{{ item.item.name }}.eveseat.net"
+      no_dev: "yes"
+      working_dir: "/var/www"
+    with_items: "{{ seat_instance.results }}"
+    when: not item.stat.exists
+
+  - name: change SeAT setup owner
+    file:
+      group: "seat"
+      owner: "{{ item.name }}"
+      path: "/var/www/{{ item.name }}.eveseat.net"
+      recurse: "yes"
+    with_items: seat_tickers
+
+  - name: allow SeAT storage folder write
+    file:
+      path: "/var/www/{{ item.name }}.eveseat.net/storage"
+      recurse: "yes"
+      mode: "guo+w"
+    with_items: seat_tickers

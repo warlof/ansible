@@ -1,0 +1,26 @@
+---
+# This tasks will create user and database
+
+  - name: Add python dependencies
+    apt:
+      name: "python-mysqldb"
+      update_cache: "no"
+      state: "present"
+
+  - name: Create SeAT instances database
+    mysql_db:
+      name: "{{ item.database.name }}"
+      state: "present"
+    with_items: "{{ seat_tickers }}"
+    when: ansible_fqdn != cluster_master_nodename
+
+  - name: Create SeAT instances users
+    mysql_user:
+      host: '%.eveseat.net'
+      name: "{{ item.database.username }}"
+      password: "{{ item.database.password }}"
+      priv: "{{ item.database.name }}.*:ALL"
+      state: "present"
+      update_password: "on_create"
+    with_items: "{{ seat_tickers }}"
+    when: ansible_fqdn != cluster_master_nodename

@@ -1,0 +1,10 @@
+---
+  - name: Reload Nginx daemons
+    service:
+      name: "nginx"
+      state: "reloaded"
+
+  - name: Restart PHP pools
+    service:
+      name: "php7.0-fpm"
+      state: "restarted"

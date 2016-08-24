@@ -1,0 +1,16 @@
+---
+# This tasks will setup nginx vhost
+
+  - name: setup nginx
+    apt:
+      name: "nginx"
+      update_cache: "no"
+      state: "present"
+
+  - name: Create vhost using template
+    template:
+      src: "vhost.conf.j2"
+      dest: "/etc/nginx/sites-available/{{ item.name }}.eveseat.net.conf"
+    with_items: seat_tickers
+    notify:
+      - Reload Nginx daemons

@@ -1,0 +1,6 @@
+---
+
+  - name: update server
+    apt:
+      update_cache: "yes"
+      upgrade: "dist"
